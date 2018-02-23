@@ -20,6 +20,7 @@ ReceivedDataDisplay::ReceivedDataDisplay(QWidget *parent) :
     QObject::connect(ui->findButton, SIGNAL(clicked()),this, SLOT(findButtonProcessing()));
     QObject::connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(deleteButtonProcessing()));
     QObject::connect(ui->deleteAllButton, SIGNAL(clicked()), this, SLOT(deleteAllButtonProcessing()));
+    QObject::connect(ui->reportButton, SIGNAL(clicked()), this, SIGNAL(reportButtonTriggered()));
 }
 
 
@@ -79,7 +80,10 @@ void ReceivedDataDisplay::addPassportExcelModel(PassportExcelModel data){
         item->setFont(font);
         item->setText(data.getGeneralData().at(i));
         ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, i, item);
-    }
+  }
+    QTableWidgetItem* item = new QTableWidgetItem;
+    ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1,
+                             data.getGeneralData().size(), item);
     this->updateCountLabel();
 }
 
@@ -100,6 +104,23 @@ void ReceivedDataDisplay::deleteAllButtonProcessing(){
 void ReceivedDataDisplay::updateCountLabel(){
     ui->countLabel->setText(QString::fromUtf8("Количество: ")
                             + QString::number(ui->tableWidget->rowCount()));
+}
+
+QList<QStringList> ReceivedDataDisplay::getAllPassportExcelModels(){
+    QList<QStringList> models;
+    for (int i = 0; i < ui->tableWidget->rowCount(); i++){
+        QStringList column;
+        column << ui->tableWidget->item(i, 0)->text()
+                  << ui->tableWidget->item(i, 1)->text()
+                  << ui->tableWidget->item(i, 2)->text()
+                  << ui->tableWidget->item(i, 3)->text()
+                  << ui->tableWidget->item(i, 4)->text()
+                  << ui->tableWidget->item(i, 5)->text() // сделать все в таком стиле
+                  << ui->tableWidget->item(i, 6)->text();
+
+        models.push_back(column);
+    }
+    return models;
 }
 
 

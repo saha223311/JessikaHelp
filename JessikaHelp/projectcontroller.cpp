@@ -31,6 +31,13 @@ ProjectController::ProjectController(QObject *parent) : QObject(parent) {
     QObject::connect(mFileProcessing, SIGNAL(foundPassportExcelModel(PassportExcelModel)),
                      mReceivedDataDisplay, SLOT(addPassportExcelModel(PassportExcelModel)));
 
+    QObject::connect(mReceivedDataDisplay, SIGNAL(reportButtonTriggered()),
+                     this, SLOT(createReports()));
+
+}
+
+void ProjectController::createReports(){
+    mReportMaker->makeReportWordLabel(mReceivedDataDisplay->getAllPassportExcelModels());
 }
 
 void ProjectController::startProgram(){

@@ -1,4 +1,5 @@
 #include "projectcontroller.h"
+#include "reportmaker.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

@@ -2,9 +2,11 @@
 #define PROJECTCONTROLLER_H
 
 #include <QObject>
+#include <QStringList>
 
 #include "fileprocessing.h"
 #include "receiveddatadisplay.h"
+#include "reportmaker.h"
 
 class ProjectController : public QObject
 {
@@ -17,10 +19,12 @@ public:
 signals:
 
 public slots:
+    void createReports();
 
 private:
     ReceivedDataDisplay* mReceivedDataDisplay;
     FileProcessing* mFileProcessing;
+    ReportMaker* mReportMaker;
 };
 
 #endif // PROJECTCONTROLLER_H

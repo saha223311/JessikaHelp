@@ -16,10 +16,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         receiveddatadisplay.cpp \
     fileprocessing.cpp \
-    projectcontroller.cpp
+    projectcontroller.cpp \
+    reportmaker.cpp
 
 HEADERS  += receiveddatadisplay.h \
     fileprocessing.h \
-    projectcontroller.h
+    projectcontroller.h \
+    reportmaker.h
 
 FORMS    += receiveddatadisplay.ui

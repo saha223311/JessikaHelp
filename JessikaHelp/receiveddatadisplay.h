@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QStringList>
 
 #include "fileprocessing.h" //ДЛЯ СТРУКТУРЫ, НАДО БУДЕТ СДЕЛАТЬ ОТДЕЛЬНЫЙ PassportExcelModel.h
 
@@ -16,6 +17,9 @@ class ReceivedDataDisplay : public QWidget
 
 public:
     explicit ReceivedDataDisplay(QWidget *parent = 0);
+
+    QList<QStringList> getAllPassportExcelModels();
+
     ~ReceivedDataDisplay();
 
 protected:
@@ -36,8 +40,10 @@ public slots:
     void deleteButtonProcessing();
     void deleteAllButtonProcessing();
 
+
 signals:
     void needToGetPassportExcelModel(int index);
+    void reportButtonTriggered();
 
 private:
     Ui::ReceivedDataDisplay *ui;
