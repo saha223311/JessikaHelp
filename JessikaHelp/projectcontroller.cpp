@@ -37,7 +37,7 @@ ProjectController::ProjectController(QObject *parent) : QObject(parent) {
 }
 
 void ProjectController::createReports(){
-    mReportMaker->makeReportWordLabel(mReceivedDataDisplay->getAllPassportExcelModels());
+    mReportMaker->makeAllReports(mReceivedDataDisplay->getAllPassportExcelModels());
 }
 
 void ProjectController::startProgram(){

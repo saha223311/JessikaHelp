@@ -18,7 +18,10 @@ public:
 signals:
 
 public slots:
-    void makeReportWordLabel(QList<QStringList> data);
+    void makeAllReports(const QList<QStringList>& data);
+
+    void makeReportWordLabel(const QList<QStringList>& data);
+    void makeReportWordEnvelope(const QList<QStringList>& data);
 
 private:
     QDateTime dateTime;
