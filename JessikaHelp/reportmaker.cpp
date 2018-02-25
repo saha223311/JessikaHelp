@@ -10,7 +10,7 @@ ReportMaker::ReportMaker(QObject *parent) : QObject(parent)
 void ReportMaker::makeAllReports(const QList<QStringList> &data){
     makeReportWordLabel(data);
     makeReportWordEnvelope(data);
-    //makeReportWordEnvelopeA4(data);
+    makeReportWordEnvelopeA4(data);
     //makeReportExcel(data);
 }
 
@@ -89,13 +89,16 @@ void ReportMaker::makeReportWordLabel(const QList<QStringList> &data){
                 text = text + enter + s;
             }
          }*/
-         if (tempN < n) text = "\n" + data.at(tempN).at(0) +
+         if (tempN < n) {
+             text = "\n" + data.at(tempN).at(0) +
                  "\nK-" + data.at(tempN).at(1) +
                  "\n" + data.at(tempN).at(2) +
                  "\n" + data.at(tempN).at(3) +
                  "\n" + data.at(tempN).at(4) +
-                 "\n" + data.at(tempN).at(5) +
-                 "\n" + data.at(tempN).at(6);
+                 "\n" + data.at(tempN).at(5);
+             if (!data.at(tempN).at(6).isEmpty())
+                 text += "\n" + data.at(tempN).at(6);
+         }
         tempN++;
          cell->querySubObject("Range")->querySubObject("Text", text);
      }
@@ -115,6 +118,10 @@ void ReportMaker::makeReportWordEnvelope(const QList<QStringList> &data){
     newFile += dateTime.currentDateTime().toString("yyyy-MM-dd");
     newFile += "_" + dateTime.currentDateTime().toString("hh-mm");
     newFile += "_envelope.doc";
+
+    QString dateTimeText;
+    dateTimeText += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    dateTimeText += " " + dateTime.currentDateTime().toString("hh:mm");
 
     QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();;
     QString applicationDirPath;
@@ -253,21 +260,24 @@ void ReportMaker::makeReportWordEnvelope(const QList<QStringList> &data){
                break;
            }
 
-        if ((tempN < n) && (x == 2) &&(((y % 6) == 2) || ((y % 6) == 5))){
 
-                   text = "\n" + data.at(tempN).at(0) +
+        if ((tempN < n) && (x == 2) &&(((y % 6) == 2) || ((y % 6) == 5))){
+                   text = QString::fromUtf8("ФГБНУ ВИР им. Н.И.Вавилова") +
+                           "\n" + data.at(tempN).at(0) +
                            "\nK-" + data.at(tempN).at(1) +
                            "\n" + data.at(tempN).at(2) +
                            "\n" + data.at(tempN).at(3) +
                            "\n" + data.at(tempN).at(4) +
-                           "\n" + data.at(tempN).at(5) +
-                           "\n" + data.at(tempN).at(6);
+                           "\n" + data.at(tempN).at(5);
+                   if (!data.at(tempN).at(6).isEmpty())
+                       text += "\n" + data.at(tempN).at(6);
                    cell->querySubObject("Range")->querySubObject("Text", text);
-
-                // SetTextToTable(t, y1 + ind + 1, x, FormatDateTime("yyyy-mm-dd hh:nn", iDateTime));
-        tempN++;
         }
 
+        if ((tempN < n) && (x == 2) && ((y % 3) == 0)){
+            cell->querySubObject("Range")->querySubObject("Text", dateTimeText);
+            tempN++;
+        }
 
 
          }
@@ -279,4 +289,163 @@ void ReportMaker::makeReportWordEnvelope(const QList<QStringList> &data){
        mWord->dynamicCall("SetDisplayAlerts(bool)", FALSE);
        mWord->dynamicCall("Quit()");
 
+}
+
+void ReportMaker::makeReportWordEnvelopeA4(const QList<QStringList> &data){
+    // Поменять путь на нормальный!
+    //как отдельную функцию в "каком-нибудь классе"
+
+    QString newFile = "D:\\";
+    newFile += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    newFile += "_" + dateTime.currentDateTime().toString("hh-mm");
+    newFile += "_envelope_A4.doc";
+
+    QString dateTimeText;
+    dateTimeText += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    dateTimeText += " " + dateTime.currentDateTime().toString("hh:mm");
+
+    QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();;
+    QString applicationDirPath;
+
+    for(int i=0;i< temporaryApplicationDirPath.length();i++){
+        if(temporaryApplicationDirPath[i] == '/')  applicationDirPath+="\\";
+        else applicationDirPath+=temporaryApplicationDirPath[i];
+    }
+    applicationDirPath+="\\template_envelope_A4.doc";
+    QFile::copy(applicationDirPath, newFile);
+
+    QAxObject* mWord = new QAxObject( "Word.Application");
+    mWord->querySubObject("Documents")->querySubObject( "Open(const QString&)", newFile);
+    mWord->querySubObject("Selection")->querySubObject("Start", 0);
+    mWord->querySubObject("Selection")->querySubObject("End", 0);
+
+    //
+      const int pageWidth = 297 - 2, pageHeight = 210 - 2; // HACK "-2" работает
+      const int marginLeft = 15, marginRight = 15;
+      const int marginTop = 15, marginBottom = 15;
+      //
+      const int widthOverlap = 30;
+      const int widthCenter = (pageWidth - widthOverlap) / 2;
+      const int widthLeft = (pageWidth - widthCenter) / 2 - marginLeft;
+      const int widthRight = (pageWidth - widthCenter) / 2 - widthOverlap;
+      //
+      const int heightOverlap = 30;
+      const int heightSpace = 100;
+      const int heightText = pageHeight - heightSpace - heightOverlap;
+      const int h1 = heightSpace - marginTop;
+      const int h2txt = heightText;
+      const int h3 = heightOverlap - marginBottom;
+      //
+      const int cellPerRecord = 3;
+      //
+      int t = 0;
+      int n = data.size();
+
+      const double kMM = 110.0 / 38.8; // коэффициент для перевода мм в единицы ворда
+
+      QAxObject* sel = mWord->querySubObject("Selection");
+      QAxObject* tables = mWord->querySubObject("ActiveDocument")->querySubObject("Tables");
+      QAxObject* newTable = tables->querySubObject("Add(Range, NumRows, NumColumns, DefaultTableBehavior, AutoFitBehavior)",
+                               mWord->querySubObject("ActiveDocument")->dynamicCall("Range()"),
+                                                   3 * n, 3, 1, 1);
+
+
+
+      QAxObject* cell;
+      QAxObject* boarder;
+      QString text;
+
+      const int dotStyle = 4;
+
+      int tempN = 0;
+      for (int row = 1; row <= n; row++){
+       int ind = (row - 1)  * cellPerRecord;
+
+       for (int y = ind + 1; y <= ind + 3; ++y){
+        for(int x = 1; x <= 3; ++x) {
+          cell = newTable->querySubObject("Cell(Row, Column)" ,
+                                          QVariant(y), QVariant(x));
+
+          boarder = cell->querySubObject("Borders(xlEdge)", 4);
+          boarder->setProperty("LineStyle",dotStyle);
+
+          switch (y % 3) {
+          case 1:
+              cell->setProperty("Height", h1 * kMM);
+              boarder = cell->querySubObject("Borders(xlEdge)", 1);
+              boarder->setProperty("LineStyle",0);
+              boarder = cell->querySubObject("Borders(xlEdge)", 3);
+              boarder->setProperty("LineStyle",0);
+
+              break;
+          case 2:
+              cell->setProperty("Height", h2txt * kMM);
+              boarder = cell->querySubObject("Borders(xlEdge)", 1);
+              boarder->setProperty("LineStyle",0);
+              boarder = cell->querySubObject("Borders(xlEdge)", 3);
+              boarder->setProperty("LineStyle",dotStyle);
+
+              break;
+
+          case 0:
+              cell->setProperty("Height", h3 * kMM);
+              boarder = cell->querySubObject("Borders(xlEdge)", 1);
+              boarder->setProperty("LineStyle",dotStyle);
+              boarder = cell->querySubObject("Borders(xlEdge)", 3);
+              boarder->setProperty("LineStyle",0);
+              break;
+
+          default:
+              break;
+          }
+
+          switch (x) {
+          case 1:
+              cell->setProperty("Width", widthLeft * kMM);
+              boarder = cell->querySubObject("Borders(xlEdge)", 2);
+              boarder->setProperty("LineStyle",0);
+
+              break;
+          case 2:
+              cell->setProperty("Width", widthCenter * kMM);
+
+              break;
+          case 3:
+              cell->setProperty("Width", widthRight * kMM);
+
+              break;
+          default:
+              break;
+          }
+
+
+       if ((tempN < n) && (x == 2) &&((y % 3) == 2)){
+                  text = QString::fromUtf8("ФГБНУ ВИР им. Н.И.Вавилова") +
+                          "\n" + data.at(tempN).at(0) +
+                          "\nK-" + data.at(tempN).at(1) +
+                          "\n" + data.at(tempN).at(2) +
+                          "\n" + data.at(tempN).at(3) +
+                          "\n" + data.at(tempN).at(4) +
+                          "\n" + data.at(tempN).at(5);
+                  if (!data.at(tempN).at(6).isEmpty())
+                      text += "\n" + data.at(tempN).at(6);
+                  cell->querySubObject("Range")->querySubObject("Text", text);
+       }
+
+       if ((tempN < n) && (x == 2) && ((y % 3) == 0)){
+           cell->querySubObject("Range")->querySubObject("Text", dateTimeText);
+           tempN++;
+       }
+
+
+        }
+       }
+      }
+
+
+
+    mWord->querySubObject("Documents")->dynamicCall("Save()");
+    mWord->querySubObject("Documents")->dynamicCall("Close()");
+    mWord->dynamicCall("SetDisplayAlerts(bool)", FALSE);
+    mWord->dynamicCall("Quit()");
 }

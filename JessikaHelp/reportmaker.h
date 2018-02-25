@@ -22,6 +22,7 @@ public slots:
 
     void makeReportWordLabel(const QList<QStringList>& data);
     void makeReportWordEnvelope(const QList<QStringList>& data);
+    void makeReportWordEnvelopeA4(const QList<QStringList>& data);
 
 private:
     QDateTime dateTime;
