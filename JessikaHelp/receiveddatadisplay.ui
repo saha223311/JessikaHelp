@@ -292,7 +292,7 @@ p, li { white-space: pre-wrap; }
    </column>
    <column>
     <property name="text">
-     <string>Примичание</string>
+     <string>Примечание</string>
     </property>
     <property name="font">
      <font>

@@ -11,7 +11,7 @@ void ReportMaker::makeAllReports(const QList<QStringList> &data){
     makeReportWordLabel(data);
     makeReportWordEnvelope(data);
     makeReportWordEnvelopeA4(data);
-    //makeReportExcel(data);
+    makeReportExcel(data);
 }
 
 //REWRITE!
@@ -448,4 +448,52 @@ void ReportMaker::makeReportWordEnvelopeA4(const QList<QStringList> &data){
     mWord->querySubObject("Documents")->dynamicCall("Close()");
     mWord->dynamicCall("SetDisplayAlerts(bool)", FALSE);
     mWord->dynamicCall("Quit()");
+}
+
+void ReportMaker::makeReportExcel(const QList<QStringList> &data){
+    // Поменять путь на нормальный!
+    //как отдельную функцию в "каком-нибудь классе"
+
+    QString newFile = "D:\\";
+    newFile += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    newFile += "_" + dateTime.currentDateTime().toString("hh-mm");
+    newFile += ".xlsx"; //XLS
+
+   /* QString dateTimeText;
+    dateTimeText += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    dateTimeText += " " + dateTime.currentDateTime().toString("hh:mm");*/
+
+    QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();;
+    QString applicationDirPath;
+
+    for(int i=0;i< temporaryApplicationDirPath.length();i++){
+        if(temporaryApplicationDirPath[i] == '/')  applicationDirPath+="\\";
+        else applicationDirPath+=temporaryApplicationDirPath[i];
+    }
+    applicationDirPath+="\\template_excel.xlsx"; //XLS
+    QFile::copy(applicationDirPath, newFile);
+
+    QAxObject* mExcel = new QAxObject( "Excel.Application");
+    QAxObject* mWorkbooks = mExcel->querySubObject( "Workbooks" );
+
+    QAxObject* mWorkbook = mWorkbooks->querySubObject( "Open(const QString&)", newFile);
+    mWorkbook->setProperty("Save", true);
+    QAxObject* mSheets = mWorkbook->querySubObject( "Sheets" );
+    QAxObject* mStatSheet = mSheets->querySubObject ("Item(const QVariant&)", QVariant("P1") );
+    //TODO: Сделать исключения, если не получается открывать различные отделы (книгу, файл и тд)
+
+    QAxObject* mCell;
+    for (int row = 2; row <= data.size() + 1; row++){
+      for (int col = 1; col <= data.at(row - 2).size(); col++){
+        mCell = mStatSheet->querySubObject("Cells(QVariant,QVariant)", row, col);
+        mCell->setProperty("Value", QVariant(data.at(row - 2).at(col - 1)));
+    }
+    }
+
+
+    //TODO: ПРОИЗВОДИТЬ ЗАКРЫТИЕ ФАЙЛА ПРИ РАЗЛИЧНЫХ ЗАВЕРШЕНИЯХ ПРОГРАММЫ
+    mWorkbook->dynamicCall("Save()");
+    mWorkbook->dynamicCall("Close()");
+    mExcel->dynamicCall("SetDisplayAlerts(bool)", FALSE);
+    mExcel->dynamicCall("Quit()");
 }
