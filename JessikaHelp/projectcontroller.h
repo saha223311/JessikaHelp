@@ -20,6 +20,7 @@ signals:
 
 public slots:
     void createReports();
+    void createLongStorageReport();
 
 private:
     ReceivedDataDisplay* mReceivedDataDisplay;

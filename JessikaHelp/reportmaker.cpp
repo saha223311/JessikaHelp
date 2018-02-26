@@ -497,3 +497,69 @@ void ReportMaker::makeReportExcel(const QList<QStringList> &data){
     mExcel->dynamicCall("SetDisplayAlerts(bool)", FALSE);
     mExcel->dynamicCall("Quit()");
 }
+
+void ReportMaker::makeReportLongStorage(const QList<QStringList> &data){
+    // Поменять путь на нормальный!
+    //как отдельную функцию в "каком-нибудь классе"
+
+    QList<QStringList> newData;
+    for (int i = 0; i < data.size(); i++){
+        QStringList temporaryStringList;
+        temporaryStringList.push_back("105");
+        temporaryStringList.push_back(data.at(i).at(1));
+        temporaryStringList.push_back(data.at(i).at(4));
+        temporaryStringList.push_back(data.at(i).at(3));
+        temporaryStringList.push_back(data.at(i).at(2));
+        temporaryStringList.push_back(data.at(i).at(5));
+        newData.push_back(temporaryStringList);
+    }
+    //QString sign = QString::fromUtf8("Составила: Кудрявцева Е.Ю.");
+
+    QString newFile = "D:\\";
+    newFile += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    newFile += "_" + dateTime.currentDateTime().toString("hh-mm");
+    newFile += "_cool.xls";
+
+   /* QString dateTimeText;
+    dateTimeText += dateTime.currentDateTime().toString("yyyy-MM-dd");
+    dateTimeText += " " + dateTime.currentDateTime().toString("hh:mm");*/
+
+    QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();;
+    QString applicationDirPath;
+
+    for(int i=0;i< temporaryApplicationDirPath.length();i++){
+        if(temporaryApplicationDirPath[i] == '/')  applicationDirPath+="\\";
+        else applicationDirPath+=temporaryApplicationDirPath[i];
+    }
+    applicationDirPath+="\\template_cool.xls";
+    QFile::copy(applicationDirPath, newFile);
+
+    QAxObject* mExcel = new QAxObject( "Excel.Application");
+    QAxObject* mWorkbooks = mExcel->querySubObject( "Workbooks" );
+
+    QAxObject* mWorkbook = mWorkbooks->querySubObject( "Open(const QString&)", newFile);
+    mWorkbook->setProperty("Save", true);
+    QAxObject* mSheets = mWorkbook->querySubObject( "Sheets" );
+    QAxObject* mStatSheet = mSheets->querySubObject ("Item(const QVariant&)", QVariant("P1") );
+    //TODO: Сделать исключения, если не получается открывать различные отделы (книгу, файл и тд)
+
+    QAxObject* mCell;
+    mCell = mStatSheet->querySubObject("Cells(QVariant,QVariant)", 4, 1);
+    QVariant sign = mCell->property("Value");
+    mCell->dynamicCall("Delete()");
+    for (int row = 3; row <= newData.size() + 2; row++){
+      for (int col = 2; col <= newData.at(row - 3).size() + 1; col++){
+        mCell = mStatSheet->querySubObject("Cells(QVariant,QVariant)", row, col);
+        mCell->setProperty("Value", QVariant(newData.at(row - 3).at(col - 2)));
+    }
+    }
+    mCell = mStatSheet->querySubObject("Cells(QVariant,QVariant)", newData.size() + 3, 1);
+    mCell->setProperty("Value", QVariant(sign));
+
+
+    //TODO: ПРОИЗВОДИТЬ ЗАКРЫТИЕ ФАЙЛА ПРИ РАЗЛИЧНЫХ ЗАВЕРШЕНИЯХ ПРОГРАММЫ
+    mWorkbook->dynamicCall("Save()");
+    mWorkbook->dynamicCall("Close()");
+    mExcel->dynamicCall("SetDisplayAlerts(bool)", FALSE);
+    mExcel->dynamicCall("Quit()");
+}

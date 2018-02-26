@@ -17,10 +17,20 @@ ReceivedDataDisplay::ReceivedDataDisplay(QWidget *parent) :
 
     ui->tableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 
-    QObject::connect(ui->findButton, SIGNAL(clicked()),this, SLOT(findButtonProcessing()));
-    QObject::connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(deleteButtonProcessing()));
-    QObject::connect(ui->deleteAllButton, SIGNAL(clicked()), this, SLOT(deleteAllButtonProcessing()));
-    QObject::connect(ui->reportButton, SIGNAL(clicked()), this, SIGNAL(reportButtonTriggered()));
+    QObject::connect(ui->findButton, SIGNAL(clicked()),
+                     this, SLOT(findButtonProcessing()));
+
+    QObject::connect(ui->deleteButton, SIGNAL(clicked()),
+                     this, SLOT(deleteButtonProcessing()));
+
+    QObject::connect(ui->deleteAllButton, SIGNAL(clicked()),
+                     this, SLOT(deleteAllButtonProcessing()));
+
+    QObject::connect(ui->reportButton, SIGNAL(clicked()),
+                     this, SIGNAL(reportButtonTriggered()));
+
+    QObject::connect(ui->longStorageReportButton, SIGNAL(clicked()),
+                     this, SIGNAL(longStorageReportButtonTriggered()));
 }
 
 

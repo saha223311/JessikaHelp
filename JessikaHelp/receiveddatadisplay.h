@@ -44,6 +44,7 @@ public slots:
 signals:
     void needToGetPassportExcelModel(int index);
     void reportButtonTriggered();
+    void longStorageReportButtonTriggered();
 
 private:
     Ui::ReceivedDataDisplay *ui;

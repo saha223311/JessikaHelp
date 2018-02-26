@@ -34,10 +34,16 @@ ProjectController::ProjectController(QObject *parent) : QObject(parent) {
     QObject::connect(mReceivedDataDisplay, SIGNAL(reportButtonTriggered()),
                      this, SLOT(createReports()));
 
+    QObject::connect(mReceivedDataDisplay, SIGNAL(longStorageReportButtonTriggered()),
+                     this, SLOT(createLongStorageReport()));
 }
 
 void ProjectController::createReports(){
     mReportMaker->makeAllReports(mReceivedDataDisplay->getAllPassportExcelModels());
+}
+
+void ProjectController::createLongStorageReport(){
+    mReportMaker->makeReportLongStorage(mReceivedDataDisplay->getAllPassportExcelModels());
 }
 
 void ProjectController::startProgram(){

@@ -19,6 +19,7 @@ signals:
 
 public slots:
     void makeAllReports(const QList<QStringList>& data);
+    void makeReportLongStorage(const QList<QStringList>& data);
 
     void makeReportWordLabel(const QList<QStringList>& data);
     void makeReportWordEnvelope(const QList<QStringList>& data);
