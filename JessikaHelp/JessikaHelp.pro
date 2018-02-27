@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     file_processing.cpp \
     project_controller.cpp \
     received_data_display.cpp \
-    report_maker.cpp
+    report_maker.cpp \
+    libtap/cpp_patch_tap.c \
+    libtap/tap.c
 
 HEADERS  += \
     tester.h \
@@ -28,7 +30,10 @@ HEADERS  += \
     file_processing.h \
     project_controller.h \
     received_data_display.h \
-    report_maker.h
+    report_maker.h \
+    libtap/cpp_patch_tap.h \
+    libtap/cpp_tap.h \
+    libtap/tap.h
 
 FORMS    += \
     received_data_display.ui
