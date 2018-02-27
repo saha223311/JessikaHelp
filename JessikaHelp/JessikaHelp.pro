@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-CONFIG += qaxcontainer c++14
+CONFIG += qaxcontainer
+QMAKE_CXXFLAGS += -std=c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,14 +15,22 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        receiveddatadisplay.cpp \
-    fileprocessing.cpp \
-    projectcontroller.cpp \
-    reportmaker.cpp
+    tester.cpp \
+    file_controller.cpp \
+    file_processing.cpp \
+    project_controller.cpp \
+    received_data_display.cpp \
+    report_maker.cpp
 
-HEADERS  += receiveddatadisplay.h \
-    fileprocessing.h \
-    projectcontroller.h \
-    reportmaker.h
+HEADERS  += \
+    tester.h \
+    file_controller.h \
+    file_processing.h \
+    project_controller.h \
+    received_data_display.h \
+    report_maker.h
 
-FORMS    += receiveddatadisplay.ui
+FORMS    += \
+    received_data_display.ui
+
+DISTFILES +=
