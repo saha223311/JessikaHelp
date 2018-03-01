@@ -12,12 +12,13 @@ int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
 
+  project_controller project;
+  project.StartProgram();
+
+  /*
   tester myTester;
   QList<QStringList> result;
-
-  project_controller project;
- // project.StartProgram();
-
+  //
   plan_tests(2);
   //
   ok(project.TestMode(myTester.GetTest(0).path_, myTester.GetTest(0).objects_) ==
@@ -30,5 +31,7 @@ int main(int argc, char *argv[])
   //
   return exit_status();
   //
+  */
+
   return a.exec();
 }

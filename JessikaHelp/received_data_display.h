@@ -17,7 +17,7 @@ public:
   QList<QStringList> GetAllPassportExcelModels();
   ~received_data_display();
 protected:
-  void KeyPressEvent(QKeyEvent*);
+  void KeyPressEvent(QKeyEvent* aEvent);
 public slots:
   void SetMaximumValueForProgressBar(int aValue);
   void SetCountOfRowsFromPassportExcelFile(int aValue);

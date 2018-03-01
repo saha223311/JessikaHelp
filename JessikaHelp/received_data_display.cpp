@@ -11,6 +11,7 @@ received_data_display::received_data_display(QWidget *parent) :
   ui->progressBar->setValue(0);
   ui->textBrowser->setReadOnly(true);
   ui->textBrowser->setFontWeight(10);
+  this->setFocus();
   //
   QRegExp rx("[1-9]\\d{0,3}");
   QValidator *validator = new QRegExpValidator (rx, 0);
@@ -99,7 +100,10 @@ void received_data_display::SetApplicationDirPath(QString aPath){
   ui->textBrowser->append(QString::fromUtf8("Открытие excel-файла: ") + aPath);
 }
 
-void received_data_display::KeyPressEvent(QKeyEvent*){
+void received_data_display::KeyPressEvent(QKeyEvent* aEvent){
+  if (aEvent->key() == Qt::Key_Enter || Qt::Key_Return){
+    FindButtonProcessing();
+  }
   if (ui->progressBar->value() == ui->progressBar->maximum()){
     ui->textBrowser->clear();
     ui->textBrowser->hide();

@@ -4,11 +4,6 @@ file_controller::file_controller(){
 }
 
 QString file_controller::CreateLabel(){
-  QString newFile = "D:\\";
-  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
-  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
-  newFile += "_label.doc";
-  //
   QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();
   QString applicationDirPath;
   for(int i=0;i< temporaryApplicationDirPath.length();i++){
@@ -18,17 +13,18 @@ QString file_controller::CreateLabel(){
       applicationDirPath+=temporaryApplicationDirPath[i];
     }
   }
+  //
+  QString newFile = applicationDirPath + "\\Reports\\";
+  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
+  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
+  newFile += "_label.doc";
+  //
   applicationDirPath+="\\template_label.doc";
   QFile::copy(applicationDirPath, newFile);
   return newFile;
 }
 
 QString file_controller::CreateEnvelope(){
-  QString newFile = "D:\\";
-  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
-  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
-  newFile += "_envelope.doc";
-  //
   QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();
   QString applicationDirPath;
   for(int i=0;i< temporaryApplicationDirPath.length();i++){
@@ -38,17 +34,18 @@ QString file_controller::CreateEnvelope(){
       applicationDirPath+=temporaryApplicationDirPath[i];
     }
   }
+  //
+  QString newFile = applicationDirPath + "\\Reports\\";
+  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
+  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
+  newFile += "_envelope.doc";
+  //
   applicationDirPath+="\\template_envelope.doc";
   QFile::copy(applicationDirPath, newFile);
   return newFile;
 }
 
 QString file_controller::CreateEnvelopeA4(){
-  QString newFile = "D:\\";
-  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
-  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
-  newFile += "_envelope_A4.doc";
-  //
   QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();
   QString applicationDirPath;
   for(int i=0;i< temporaryApplicationDirPath.length();i++){
@@ -58,17 +55,18 @@ QString file_controller::CreateEnvelopeA4(){
       applicationDirPath+=temporaryApplicationDirPath[i];
     }
   }
+  //
+  QString newFile = applicationDirPath + "\\Reports\\";
+  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
+  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
+  newFile += "_envelope_A4.doc";
+  //
   applicationDirPath+="\\template_envelope_A4.doc";
   QFile::copy(applicationDirPath, newFile);
   return newFile;
 }
 
 QString file_controller::CreateExcel(){
-  QString newFile = "D:\\";
-  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
-  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
-  newFile += ".xls";
-  //
   QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();
   QString applicationDirPath;
   for(int i=0;i< temporaryApplicationDirPath.length();i++){
@@ -78,17 +76,18 @@ QString file_controller::CreateExcel(){
       applicationDirPath+=temporaryApplicationDirPath[i];
     }
   }
+  //
+  QString newFile = applicationDirPath + "\\Reports\\";
+  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
+  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
+  newFile += ".xls";
+  //
   applicationDirPath+="\\template_excel.xls";
   QFile::copy(applicationDirPath, newFile);
   return newFile;
 }
 
 QString file_controller::CreateCool(){
-  QString newFile = "D:\\";
-  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
-  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
-  newFile += "_cool.xls";
-  //
   QString temporaryApplicationDirPath = QCoreApplication::applicationDirPath();
   QString applicationDirPath;
   for(int i=0;i< temporaryApplicationDirPath.length();i++){
@@ -98,6 +97,12 @@ QString file_controller::CreateCool(){
       applicationDirPath+=temporaryApplicationDirPath[i];
     }
   }
+  //
+  QString newFile = applicationDirPath + "\\Reports\\";
+  newFile += dateTime_.currentDateTime().toString("yyyy-MM-dd");
+  newFile += "_" + dateTime_.currentDateTime().toString("hh-mm");
+  newFile += "_cool.xls";
+  //
   applicationDirPath+="\\template_cool.xls";
   QFile::copy(applicationDirPath, newFile);
   return newFile;
